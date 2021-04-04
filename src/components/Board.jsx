@@ -1,14 +1,18 @@
 import React from "react";
 import Square from "./Squares";
+import { fen_analyzer as putPiecesOnBoard } from "./Fen";
 
 import "./style.css";
 
 class Board extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
-			positions: [["black_rook", "black_knight", "black_bishop", "black_queen", "black_king", "black_bishop", "black_knight", "black_rook"], [], [], [], [], [], [], []],
+			// random_pos: "qq4n1/2QNqq2/N1Q1pqPn/1rrNpRP1/1rbNR1P1/kQ1RB1P1/2Q1K1P1/8 w - - 0 1",
+			inicial_pos: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq",
+			positions: [[], [], [], [], [], [], [], []],
+			currentFen: "",
 		};
 	}
 
@@ -23,16 +27,20 @@ class Board extends React.Component {
 		if (numberLine % 2 === 0) {
 			content = line.map((piece, index) => {
 				var color = index % 2 === 0 ? "#EEEED2" : "#769656";
-				return <Square key={index} color={color} piece={piece} onClick={() => this.movePiece(this.state.positions[2][7], 2, 7)} />;
+				return <Square key={index} color={color} piece={piece} onClick={() => this.movePiece(piece, numberLine, index)} />;
 			});
 		} else {
 			content = line.map((piece, index) => {
 				var color = index % 2 !== 0 ? "#EEEED2" : "#769656";
-				return <Square key={index} color={color} piece={piece} onClick={() => this.movePiece(this.state.positions[2][7], 2, 7)} />;
+				return <Square key={index} color={color} piece={piece} onClick={() => this.movePiece(piece, numberLine, index)} />;
 			});
 		}
 
 		return content;
+	}
+
+	componentDidMount() {
+		this.setState({ positions: putPiecesOnBoard(this.state.inicial_pos) });
 	}
 
 	render() {

@@ -1,0 +1,40 @@
+Não sei:
+    if (this.props.color === "#b5b800") {
+        estilo = {
+            backgroundColor: "rgba(181, 184, 0, 0.3)",
+            width: "60px",
+            height: "60px",
+            border: "0px solid black",
+        };
+
+Movimentos possiveis:
+    else if (typeof this.props.color === "object") {
+        estilo = {
+            backgroundColor: this.props.color[1],
+            width: "60px",
+            height: "60px",
+            border: "0px solid black",
+            cursor: "pointer",
+        };
+
+Nova casa da peça:
+    else if (this.props.color === "newSquare") {
+        estilo = {
+            backgroundColor: "rgb(180, 184, 0)",
+            width: "60px",
+            height: "60px",
+            border: "0px solid black",
+            cursor: "pointer",
+        };
+
+Casas normais:
+    Casas escuras: #769656
+    Casas claras: #EEEED2
+    else {
+            estilo = {
+                backgroundColor: this.props.color,
+                width: "60px",
+                height: "60px",
+                border: "0px solid black",
+            };
+		}
