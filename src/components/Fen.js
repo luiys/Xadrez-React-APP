@@ -18,16 +18,6 @@ export function fen_analyzer(param) {
 	changeNames(lines[7]);
 	createPiecesPosition(lines[7], 7, piecePositions);
 
-	// this.state.player = board[7].split(" ")[1] === undefined ? "w" : board[7].split(" ")[1];
-
-	// if (board[7].split(" ")[2] !== undefined) {
-	// 	this.state.castling = board[7].split(" ")[2].split("");
-	// } else {
-	// 	this.state.castling = "-";
-	// }
-
-	// this.analiseCheckMate();
-
 	game.piecePositions = piecePositions;
 
 	return piecePositions;
@@ -89,9 +79,46 @@ function changeNames(array) {
 				array[i] = "white_pawn";
 				break;
 			default:
-				throw new "unexpected value in FEN"();
+			// "unexpected value or a number"
 		}
 	}
 
 	return array;
+}
+
+export function create_fen() {
+	let line = [];
+
+	for (let i = 0; i < 8; i++) {
+		line.push(line_fen(i));
+		line[i] = line[i].join("");
+	}
+
+	// if (this.state.castling !== "-" || this.state.castling === undefined) {
+	// 	this.state.currentFEN = `${line.join("/")} ${this.state.player} ${this.state.castling.join("")} ${enPassant} 0 1`;
+	// } else {
+	// 	this.state.currentFEN = `${line.join("/")} ${this.state.player} ${this.state.castling} ${enPassant} 0 1`;
+	// }
+}
+
+function line_fen(line) {
+	var final_line = [];
+	var count = 0;
+
+	for (var i = 0; i < 8; i++) {
+		if (this.state.positions[line][i] === undefined) {
+			count++;
+			if (i === 7) {
+				final_line.push(count);
+			}
+		} else if (this.state.positions[line][i] !== undefined) {
+			if (count !== 0) {
+				final_line.push(count);
+			}
+			final_line.push(this.state.positions[line][i]);
+			count = 0;
+		}
+	}
+
+	return this.inverseChangeNames(final_line);
 }

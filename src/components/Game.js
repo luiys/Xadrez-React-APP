@@ -1,20 +1,25 @@
 export default class Game {
-	currentFen = "";
-	piecePositions = [[], [], [], [], [], [], [], []];
-
-	set fen(fen) {
-		this.fen = fen;
+	constructor() {
+		this.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
+		this.piecePositions = [[], [], [], [], [], [], [], []];
 	}
 
-	get fen() {
+	set currentFen(newCurrentFen) {
+		this.fen = newCurrentFen;
+	}
+
+	get currentFen() {
 		return this.fen;
 	}
 
-	set piecePositions(positions) {
-		this.positions = positions;
+	/**
+	 * @param {any[][]} newPositions
+	 */
+	set piecePositions(newPositions) {
+		this.positions = newPositions;
 	}
 
-	get piecePositions() {
+	get PiecePositions() {
 		return this.positions;
 	}
 }
