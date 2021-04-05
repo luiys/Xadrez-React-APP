@@ -1,5 +1,6 @@
 import React from "react";
 import Board from "./components/Board.jsx";
+import GithubCorner from "react-github-corner";
 
 class App extends React.Component {
 	render() {
@@ -26,6 +27,7 @@ class App extends React.Component {
 							<span className="flip-back">RESET !</span>
 						</a>
 					</div>
+					<GithubCorner href="https://github.com/luiys/Xadrez-React-APP" bannerColor="#EEEED2" octoColor="#769656" size={80} direction="right" />
 				</div>
 			</div>
 		);
