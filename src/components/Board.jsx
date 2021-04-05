@@ -1,8 +1,8 @@
 import React from "react";
 import Square from "./Squares";
-import { fen_analyzer as putPiecesOnBoard } from "./Fen";
-import { MainMovePiece } from "./MovePiece";
-import Game from "./Game";
+import { fen_analyzer as putPiecesOnBoard, create_fen } from "./js/Fen";
+import { MainMovePiece } from "./js/MovePiece";
+import Game from "./js/Game";
 import "./style.css";
 
 const game = new Game();
@@ -41,7 +41,11 @@ class Board extends React.Component {
 	}
 
 	handleClick(piece, numberLine, index) {
-		this.setState({ positions: MainMovePiece(piece, numberLine, index, this.state.positions) });
+		let positions = MainMovePiece(piece, numberLine, index, this.state.positions);
+		let currentFEN = create_fen(positions);
+
+		this.setState({ positions: positions });
+		this.setState({ currentFen: currentFEN });
 	}
 
 	componentDidMount() {

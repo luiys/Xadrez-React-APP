@@ -1,10 +1,11 @@
-var global_variables = {
+var _global = {
 	Clicked: false,
 	PieceToBeMoved: "",
 	SquareOfSelectedPiece: [undefined, undefined],
 	PossibleMoviments: [],
 	PiecePositions: [[], [], [], [], [], [], [], []],
 	enPassant: [undefined, undefined],
+	Player: "w",
 };
 
 export function MainMovePiece(piece, y, x, piecePositions) {
@@ -12,42 +13,53 @@ export function MainMovePiece(piece, y, x, piecePositions) {
 		var colorPiece = piece.split("_")[0];
 	}
 
-	global_variables.PiecePositions = piecePositions;
+	_global.PiecePositions = piecePositions;
 
-	if (global_variables.Clicked === false && piece !== undefined) {
+	if (_global.Clicked === false && piece !== undefined) {
 		selectPiece(piece, y, x);
 	} else {
-		if (piece !== undefined && colorPiece === global_variables.PieceToBeMoved.split("_")[0]) {
+		if (piece !== undefined && colorPiece === _global.PieceToBeMoved.split("_")[0]) {
 			selectPiece(piece, y, x);
 		} else {
-			doTheMove(piece, y, x);
+			doTheMove(y, x);
 		}
 	}
 
-	return global_variables.PiecePositions;
+	return _global.PiecePositions;
 }
 
 function selectPiece(piece, y, x) {
-	global_variables.Clicked = true;
-	global_variables.PieceToBeMoved = piece;
-	global_variables.SquareOfSelectedPiece = [y, x];
-	global_variables.PossibleMoviments = switchPiece(piece, y, x);
+	_global.Clicked = true;
+	_global.PieceToBeMoved = piece;
+	_global.SquareOfSelectedPiece = [y, x];
+	_global.PossibleMoviments = switchPiece(piece, y, x);
 }
 
-function doTheMove(piece, y, x) {
-	for (let i = 0; i < global_variables.PossibleMoviments.length; i++) {
-		if (y === global_variables.PossibleMoviments[i][0] && x === global_variables.PossibleMoviments[i][1]) {
-			//promoção de peão
-			if (global_variables.PieceToBeMoved.split("_")[1] === "pawn" && (y === 7 || y === 0)) {
-				global_variables.PieceToBeMoved = global_variables.PieceToBeMoved.split("_")[0] + "_queen";
+function doTheMove(y, x) {
+	try {
+		var possible = false;
+		for (let i = 0; i < _global.PossibleMoviments.length; i++) {
+			if (y === _global.PossibleMoviments[i][0] && x === _global.PossibleMoviments[i][1]) {
+				//promoção de peão
+				if (_global.PieceToBeMoved.split("_")[1] === "pawn" && (y === 7 || y === 0)) {
+					_global.PieceToBeMoved = _global.PieceToBeMoved.split("_")[0] + "_queen";
+				}
+				_global.PiecePositions[y][x] = _global.PieceToBeMoved;
+				_global.PiecePositions[_global.SquareOfSelectedPiece[0]][_global.SquareOfSelectedPiece[1]] = undefined;
+				_global.PossibleMoviments = [];
+				_global.Clicked = false;
+				_global.Player = _global.Player === "w" ? "b" : "W";
+				possible = true;
 			}
-
-			global_variables.PiecePositions[y][x] = global_variables.PieceToBeMoved;
-			global_variables.PiecePositions[global_variables.SquareOfSelectedPiece[0]][global_variables.SquareOfSelectedPiece[1]] = undefined;
-			global_variables.PossibleMoviments = [];
-			global_variables.Clicked = false;
 		}
-	}
+
+		if (!possible) {
+			_global.Clicked = false;
+			_global.PieceToBeMoved = "";
+			_global.SquareOfSelectedPiece = [undefined, undefined];
+			_global.PossibleMoviments = [];
+		}
+	} catch (e) {}
 }
 
 function switchPiece(piece, y, x) {
@@ -83,7 +95,7 @@ function switchPiece(piece, y, x) {
 
 function pawn_moviments(y, x, color) {
 	var possible_moviments = [];
-	var positions = global_variables.PiecePositions;
+	var positions = _global.PiecePositions;
 
 	if (color === "white") {
 		if (positions[y - 1][x] === undefined) {
@@ -92,10 +104,10 @@ function pawn_moviments(y, x, color) {
 				possible_moviments.push([y - 2, x]);
 			}
 		}
-		if (positions[y - 1][x + 1] !== undefined || (y - 1 === global_variables.enPassant[0] && x + 1 === global_variables.enPassant[1])) {
+		if (positions[y - 1][x + 1] !== undefined || (y - 1 === _global.enPassant[0] && x + 1 === _global.enPassant[1])) {
 			possible_moviments.push([y - 1, x + 1]);
 		}
-		if (positions[y - 1][x - 1] !== undefined || (y - 1 === global_variables.enPassant[0] && x - 1 === global_variables.enPassant[1])) {
+		if (positions[y - 1][x - 1] !== undefined || (y - 1 === _global.enPassant[0] && x - 1 === _global.enPassant[1])) {
 			possible_moviments.push([y - 1, x - 1]);
 		}
 	} else if (color === "black") {
@@ -105,10 +117,10 @@ function pawn_moviments(y, x, color) {
 				possible_moviments.push([y + 2, x]);
 			}
 		}
-		if (positions[y + 1][x + 1] !== undefined || (y + 1 === global_variables.enPassant[0] && x + 1 === global_variables.enPassant[1])) {
+		if (positions[y + 1][x + 1] !== undefined || (y + 1 === _global.enPassant[0] && x + 1 === _global.enPassant[1])) {
 			possible_moviments.push([y + 1, x + 1]);
 		}
-		if (positions[y + 1][x - 1] !== undefined || (y + 1 === global_variables.enPassant[0] && x - 1 === global_variables.enPassant[1])) {
+		if (positions[y + 1][x - 1] !== undefined || (y + 1 === _global.enPassant[0] && x - 1 === _global.enPassant[1])) {
 			possible_moviments.push([y + 1, x - 1]);
 		}
 	}
@@ -126,7 +138,7 @@ function filterPossibleMovimets(param) {
 
 function rook_moviments(y, x, color) {
 	var possible_moviments = [];
-	var positions = global_variables.PiecePositions;
+	var positions = _global.PiecePositions;
 
 	// analise dos movimentos possiveis para tras
 	try {
@@ -192,7 +204,7 @@ function rook_moviments(y, x, color) {
 
 function bishop_moviments(y, x, color) {
 	var possible_moviments = [];
-	var positions = global_variables.PiecePositions;
+	var positions = _global.PiecePositions;
 
 	//analise de movimentos na diagonal frente-direita
 	try {
@@ -267,7 +279,7 @@ function queen_moviments(y, x, color) {
 
 function knight_moviments(y, x, color) {
 	var possible_moviments = [];
-	var positions = global_variables.PiecePositions;
+	var positions = _global.PiecePositions;
 
 	try {
 		if (positions[y - 2][x + 1] === undefined || positions[y - 2][x + 1].split("_")[0] !== color) {
@@ -325,7 +337,7 @@ function knight_moviments(y, x, color) {
 
 function king_moviments(y, x, color) {
 	var possible_moviments = [];
-	var positions = global_variables.PiecePositions;
+	var positions = _global.PiecePositions;
 
 	try {
 		//frente
