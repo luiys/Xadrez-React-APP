@@ -6,6 +6,8 @@ var _global = {
 	PiecePositions: [[], [], [], [], [], [], [], []],
 	enPassant: [undefined, undefined],
 	Player: "w",
+	lastSquare: [undefined, undefined],
+	newSquare: [undefined, undefined],
 };
 
 export function MainMovePiece(piece, y, x, piecePositions) {
@@ -25,7 +27,7 @@ export function MainMovePiece(piece, y, x, piecePositions) {
 		}
 	}
 
-	return _global.PiecePositions;
+	return [_global.SquareOfSelectedPiece, _global.lastSquare, _global.newSquare, _global.PiecePositions, _global.PossibleMoviments];
 }
 
 function selectPiece(piece, y, x) {
@@ -49,6 +51,8 @@ function doTheMove(y, x) {
 				_global.PossibleMoviments = [];
 				_global.Clicked = false;
 				_global.Player = _global.Player === "w" ? "b" : "W";
+				_global.lastSquare = _global.SquareOfSelectedPiece;
+				_global.newSquare = [y, x];
 				possible = true;
 			}
 		}

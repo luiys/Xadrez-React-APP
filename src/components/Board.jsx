@@ -14,6 +14,10 @@ class Board extends React.Component {
 		this.state = {
 			positions: [[], [], [], [], [], [], [], []],
 			currentFen: game.currentFen,
+			activeSquare: [undefined, undefined],
+			lastSquare: [undefined, undefined],
+			newSquare: [undefined, undefined],
+			possible_moviments: [],
 		};
 	}
 
@@ -25,27 +29,57 @@ class Board extends React.Component {
 			line[i] = line[i] === undefined ? undefined : line[i];
 		}
 
-		if (numberLine % 2 === 0) {
-			content = line.map((piece, index) => {
-				var color = index % 2 === 0 ? "#EEEED2" : "#769656";
-				return <Square key={index} color={color} piece={piece} onClick={() => this.handleClick(piece, numberLine, index)} />;
-			});
-		} else {
-			content = line.map((piece, index) => {
-				var color = index % 2 !== 0 ? "#EEEED2" : "#769656";
-				return <Square key={index} color={color} piece={piece} onClick={() => this.handleClick(piece, numberLine, index)} />;
-			});
-		}
+		content = line.map((piece, index) => {
+			var color = "";
+			if (numberLine % 2 === 0) {
+				color = index % 2 === 0 ? "clara" : "escura";
+				if (
+					(piece !== undefined && numberLine === this.state.activeSquare[0] && index === this.state.activeSquare[1]) ||
+					(piece === undefined && numberLine === this.state.lastSquare[0] && index === this.state.lastSquare[1]) ||
+					(piece !== undefined && numberLine === this.state.newSquare[0] && index === this.state.newSquare[1])
+				) {
+					color = "ativa";
+				} else {
+					for (let i = 0; i < this.state.possible_moviments.length; i++) {
+						if (numberLine === this.state.possible_moviments[i][0] && index === this.state.possible_moviments[i][1]) {
+							color = ["possible_moviment_square", color];
+						}
+					}
+				}
+			} else {
+				color = index % 2 !== 0 ? "clara" : "escura";
+				if (
+					(piece !== undefined && numberLine === this.state.activeSquare[0] && index === this.state.activeSquare[1]) ||
+					(piece === undefined && numberLine === this.state.lastSquare[0] && index === this.state.lastSquare[1]) ||
+					(piece !== undefined && numberLine === this.state.newSquare[0] && index === this.state.newSquare[1])
+				) {
+					color = "ativa";
+				} else {
+					for (let i = 0; i < this.state.possible_moviments.length; i++) {
+						if (numberLine === this.state.possible_moviments[i][0] && index === this.state.possible_moviments[i][1]) {
+							color = ["possible_moviment_square", color];
+						}
+					}
+				}
+			}
+			return <Square key={index} color={color} piece={piece} onClick={() => this.handleClick(piece, numberLine, index)} />;
+		});
 
 		return content;
 	}
 
 	handleClick(piece, numberLine, index) {
-		let positions = MainMovePiece(piece, numberLine, index, this.state.positions);
+		let [activeSquare, lastSquare, newSquare, positions, possible_moviments] = MainMovePiece(piece, numberLine, index, this.state.positions);
 		let currentFEN = create_fen(positions);
 
-		this.setState({ positions: positions });
-		this.setState({ currentFen: currentFEN });
+		this.setState({
+			positions: positions,
+			currentFen: currentFEN,
+			activeSquare: activeSquare,
+			newSquare: newSquare,
+			lastSquare: lastSquare,
+			possible_moviments: possible_moviments,
+		});
 	}
 
 	componentDidMount() {
@@ -53,6 +87,7 @@ class Board extends React.Component {
 	}
 
 	render() {
+		// console.log(this.state.lastSquare);
 		return (
 			<div className="board">
 				<div className="line">{this.createSquares(0)}</div>
