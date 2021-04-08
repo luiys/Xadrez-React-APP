@@ -11,16 +11,12 @@ var _global = {
 };
 
 export function MainMovePiece(piece, y, x, piecePositions) {
-	if (piece !== undefined) {
-		var colorPiece = piece.split("_")[0];
-	}
-
 	_global.PiecePositions = piecePositions;
 
 	if (_global.Clicked === false && piece !== undefined) {
 		selectPiece(piece, y, x);
 	} else {
-		if (piece !== undefined && colorPiece === _global.PieceToBeMoved.split("_")[0]) {
+		if (piece !== undefined && piece.split("_")[0] === _global.PieceToBeMoved.split("_")[0]) {
 			selectPiece(piece, y, x);
 		} else {
 			doTheMove(y, x);
@@ -67,34 +63,24 @@ function doTheMove(y, x) {
 }
 
 function switchPiece(piece, y, x) {
-	var possible_moviments = [];
-	var typePiece = piece.split("_")[1];
 	var colorPiece = piece.split("_")[0];
 
-	switch (typePiece) {
+	switch (piece.split("_")[1]) {
 		case "rook":
-			possible_moviments = rook_moviments(y, x, colorPiece);
-			break;
+			return rook_moviments(y, x, colorPiece);
 		case "knight":
-			possible_moviments = knight_moviments(y, x, colorPiece);
-			break;
+			return knight_moviments(y, x, colorPiece);
 		case "bishop":
-			possible_moviments = bishop_moviments(y, x, colorPiece);
-			break;
+			return bishop_moviments(y, x, colorPiece);
 		case "queen":
-			possible_moviments = queen_moviments(y, x, colorPiece);
-			break;
+			return queen_moviments(y, x, colorPiece);
 		case "king":
-			possible_moviments = king_moviments(y, x, colorPiece);
-			break;
+			return king_moviments(y, x, colorPiece);
 		case "pawn":
-			possible_moviments = pawn_moviments(y, x, colorPiece);
-			break;
+			return pawn_moviments(y, x, colorPiece);
 		default:
 			console.error("unexpected piece");
 	}
-
-	return possible_moviments;
 }
 
 function pawn_moviments(y, x, color) {
@@ -128,16 +114,13 @@ function pawn_moviments(y, x, color) {
 			possible_moviments.push([y + 1, x - 1]);
 		}
 	}
-
 	return possible_moviments;
 }
 
 function filterPossibleMovimets(param) {
-	param = param.filter((moviment) => {
+	return param.filter((moviment) => {
 		return moviment[0] <= 7 && moviment[0] >= 0 && moviment[1] <= 7 && moviment[1] >= 0;
 	});
-
-	return param;
 }
 
 function rook_moviments(y, x, color) {
@@ -201,9 +184,7 @@ function rook_moviments(y, x, color) {
 	} catch (e) {}
 
 	//limpeza parar tirar casas que não existem (bug)
-	possible_moviments = filterPossibleMovimets(possible_moviments);
-
-	return possible_moviments;
+	return filterPossibleMovimets(possible_moviments);
 }
 
 function bishop_moviments(y, x, color) {
@@ -267,18 +248,14 @@ function bishop_moviments(y, x, color) {
 	} catch (e) {}
 
 	//limpeza parar tirar casas que não existem (bug)
-	possible_moviments = filterPossibleMovimets(possible_moviments);
-
-	return possible_moviments;
+	return filterPossibleMovimets(possible_moviments);
 }
 
 function queen_moviments(y, x, color) {
 	var straightMoviments = rook_moviments(y, x, color);
 	var diagonalMoviments = bishop_moviments(y, x, color);
 
-	var possible_moviments = straightMoviments.concat(diagonalMoviments);
-
-	return possible_moviments;
+	return straightMoviments.concat(diagonalMoviments);
 }
 
 function knight_moviments(y, x, color) {
@@ -334,9 +311,7 @@ function knight_moviments(y, x, color) {
 	} catch (e) {}
 
 	//limpeza parar tirar casas que não existem (bug)
-	possible_moviments = filterPossibleMovimets(possible_moviments);
-
-	return possible_moviments;
+	return filterPossibleMovimets(possible_moviments);
 }
 
 function king_moviments(y, x, color) {
@@ -400,7 +375,5 @@ function king_moviments(y, x, color) {
 	} catch (e) {}
 
 	//limpeza parar tirar casas que não existem (bug)
-	possible_moviments = filterPossibleMovimets(possible_moviments);
-
-	return possible_moviments;
+	return filterPossibleMovimets(possible_moviments);
 }

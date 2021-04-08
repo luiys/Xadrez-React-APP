@@ -23,49 +23,47 @@ class Board extends React.Component {
 
 	createSquares(numberLine) {
 		var line = this.state.positions[numberLine];
-		var content;
 
 		for (let i = 0; i < 8; i++) {
 			line[i] = line[i] === undefined ? undefined : line[i];
 		}
 
-		content = line.map((piece, index) => {
+		function setSquareColor(color, piece, numberLine, index, activeSquare, lastSquare, newSquare, possibleMoviments) {
+			var isActive = piece !== undefined && numberLine === activeSquare[0] && index === activeSquare[1];
+			var isLastSquare = piece === undefined && numberLine === lastSquare[0] && index === lastSquare[1];
+			var isNewSquare = piece !== undefined && numberLine === newSquare[0] && index === newSquare[1];
+
+			if (isActive || isLastSquare || isNewSquare) {
+				for (let i = 0; i < possibleMoviments.length; i++) {
+					if (numberLine === possibleMoviments[i][0] && index === possibleMoviments[i][1]) {
+						return ["possible_moviment_square", "rgb(180, 184, 0)"];
+					}
+				}
+
+				return "ativa";
+			} else {
+				for (let i = 0; i < possibleMoviments.length; i++) {
+					if (numberLine === possibleMoviments[i][0] && index === possibleMoviments[i][1]) {
+						return ["possible_moviment_square", color];
+					}
+				}
+				return color;
+			}
+		}
+
+		return line.map((piece, index) => {
 			var color = "";
+
 			if (numberLine % 2 === 0) {
 				color = index % 2 === 0 ? "clara" : "escura";
-				if (
-					(piece !== undefined && numberLine === this.state.activeSquare[0] && index === this.state.activeSquare[1]) ||
-					(piece === undefined && numberLine === this.state.lastSquare[0] && index === this.state.lastSquare[1]) ||
-					(piece !== undefined && numberLine === this.state.newSquare[0] && index === this.state.newSquare[1])
-				) {
-					color = "ativa";
-				} else {
-					for (let i = 0; i < this.state.possible_moviments.length; i++) {
-						if (numberLine === this.state.possible_moviments[i][0] && index === this.state.possible_moviments[i][1]) {
-							color = ["possible_moviment_square", color];
-						}
-					}
-				}
+				color = setSquareColor(color, piece, numberLine, index, this.state.activeSquare, this.state.lastSquare, this.state.newSquare, this.state.possible_moviments);
 			} else {
 				color = index % 2 !== 0 ? "clara" : "escura";
-				if (
-					(piece !== undefined && numberLine === this.state.activeSquare[0] && index === this.state.activeSquare[1]) ||
-					(piece === undefined && numberLine === this.state.lastSquare[0] && index === this.state.lastSquare[1]) ||
-					(piece !== undefined && numberLine === this.state.newSquare[0] && index === this.state.newSquare[1])
-				) {
-					color = "ativa";
-				} else {
-					for (let i = 0; i < this.state.possible_moviments.length; i++) {
-						if (numberLine === this.state.possible_moviments[i][0] && index === this.state.possible_moviments[i][1]) {
-							color = ["possible_moviment_square", color];
-						}
-					}
-				}
+				color = setSquareColor(color, piece, numberLine, index, this.state.activeSquare, this.state.lastSquare, this.state.newSquare, this.state.possible_moviments);
 			}
+
 			return <Square key={index} color={color} piece={piece} onClick={() => this.handleClick(piece, numberLine, index)} />;
 		});
-
-		return content;
 	}
 
 	handleClick(piece, numberLine, index) {
@@ -87,7 +85,6 @@ class Board extends React.Component {
 	}
 
 	render() {
-		// console.log(this.state.lastSquare);
 		return (
 			<div className="board">
 				<div className="line">{this.createSquares(0)}</div>

@@ -49,26 +49,24 @@ class Square extends React.Component {
 			cursor: cursor,
 		};
 
-		var content;
-
 		var piece = this.imageToPiece(this.props.piece);
 
 		if (this.props.color[0] === "possible_moviment_square") {
 			if (this.props.piece !== undefined && this.props.piece !== 0) {
-				content = (
+				return (
 					<div style={estilo} className="Square" onClick={() => this.props.onClick()}>
 						<img src={piece} alt={this.props.piece}></img>
 					</div>
 				);
 			} else if (this.props.piece === undefined) {
-				content = (
+				return (
 					<div style={estilo} className="Square" onClick={() => this.props.onClick()}>
 						<div className="PossibleMoviments"></div>
 					</div>
 				);
 			}
 		} else if (this.props.piece !== undefined && this.props.piece !== 0) {
-			content = (
+			return (
 				<div style={estilo} className="Square" onClick={() => this.props.onClick()}>
 					<div className="containerImg">
 						<img src={piece} alt={this.props.piece}></img>
@@ -76,10 +74,8 @@ class Square extends React.Component {
 				</div>
 			);
 		} else {
-			content = <div style={estilo} className="Square" onClick={() => this.props.onClick()}></div>;
+			return <div style={estilo} className="Square" onClick={() => this.props.onClick()}></div>;
 		}
-
-		return <React.Fragment>{content}</React.Fragment>;
 	}
 
 	imageToPiece(piece) {
