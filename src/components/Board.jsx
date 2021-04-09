@@ -68,7 +68,7 @@ class Board extends React.Component {
 	}
 
 	handleClick(piece, numberLine, index) {
-		let [activeSquare, lastSquare, newSquare, positions, possible_moviments] = MainMovePiece(piece, numberLine, index, this.state.positions);
+		let [activeSquare, lastSquare, newSquare, positions, possible_moviments] = MainMovePiece(piece, numberLine, index, this.state.positions, this.state.currentFen);
 		let currentFEN = create_fen(positions);
 
 		this.setState({

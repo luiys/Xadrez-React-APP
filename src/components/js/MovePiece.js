@@ -7,13 +7,18 @@ var _global = {
 	PossibleMoviments: [],
 	PiecePositions: [[], [], [], [], [], [], [], []],
 	enPassant: [undefined, undefined],
-	Player: "w",
+	Player: "",
 	lastSquare: [undefined, undefined],
 	newSquare: [undefined, undefined],
 };
 
-export function MainMovePiece(piece, y, x, piecePositions) {
+export default function getPlayer() {
+	return _global.Player;
+}
+
+export function MainMovePiece(piece, y, x, piecePositions, currentFEN) {
 	_global.PiecePositions = piecePositions;
+	_global.Player = currentFEN.split(" ")[1];
 
 	if (_global.Clicked === false && piece !== undefined && piece.split("")[0] === _global.Player) {
 		selectPiece(piece, y, x);

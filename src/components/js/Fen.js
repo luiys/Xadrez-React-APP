@@ -1,4 +1,5 @@
 import Game from "./Game";
+import getPlayer from "./MovePiece";
 
 const game = new Game();
 
@@ -39,6 +40,8 @@ export function fen_analyzer(param) {
 		return piecePositions;
 	}
 
+	_global.player = board[7].split(" ")[1] === undefined ? "w" : board[7].split(" ")[1];
+
 	game.piecePositions = piecePositions;
 
 	return piecePositions;
@@ -75,7 +78,7 @@ export function create_fen(positions) {
 
 	_global.currentFEN = line.join("/");
 
-	return line.join("/");
+	return `${line.join("/")} ${getPlayer()}`;
 }
 
 function changeNames(array) {
