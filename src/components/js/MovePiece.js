@@ -7,7 +7,7 @@ var _global = {
 	PossibleMoviments: [],
 	PiecePositions: [[], [], [], [], [], [], [], []],
 	enPassant: [undefined, undefined],
-	Player: "",
+	Player: "w",
 	lastSquare: [undefined, undefined],
 	newSquare: [undefined, undefined],
 };
@@ -15,10 +15,10 @@ var _global = {
 export function MainMovePiece(piece, y, x, piecePositions) {
 	_global.PiecePositions = piecePositions;
 
-	if (_global.Clicked === false && piece !== undefined) {
+	if (_global.Clicked === false && piece !== undefined && piece.split("")[0] === _global.Player) {
 		selectPiece(piece, y, x);
 	} else {
-		if (piece !== undefined && piece.split("_")[0] === _global.PieceToBeMoved.split("_")[0]) {
+		if (piece !== undefined && piece.split("_")[0] === _global.PieceToBeMoved.split("_")[0] && piece.split("")[0] === _global.Player) {
 			selectPiece(piece, y, x);
 		} else {
 			doTheMove(y, x);
@@ -48,7 +48,7 @@ function doTheMove(y, x) {
 				_global.PiecePositions[_global.SquareOfSelectedPiece[0]][_global.SquareOfSelectedPiece[1]] = undefined;
 				_global.PossibleMoviments = [];
 				_global.Clicked = false;
-				_global.Player = _global.Player === "w" ? "b" : "W";
+				_global.Player = _global.Player === "w" ? "b" : "w";
 				_global.lastSquare = _global.SquareOfSelectedPiece;
 				_global.newSquare = [y, x];
 				possible = true;
