@@ -79,48 +79,27 @@ class Square extends React.Component {
 	}
 
 	imageToPiece(piece) {
-		switch (piece) {
-			case "black_pawn":
-				piece = black_pawn_png;
-				break;
-			case "black_rook":
-				piece = black_rook_png;
-				break;
-			case "black_knight":
-				piece = black_knight_png;
-				break;
-			case "black_bishop":
-				piece = black_bishop_png;
-				break;
-			case "black_queen":
-				piece = black_queen_png;
-				break;
-			case "black_king":
-				piece = black_king_png;
-				break;
-			case "white_pawn":
-				piece = white_pawn_png;
-				break;
-			case "white_rook":
-				piece = white_rook_png;
-				break;
-			case "white_knight":
-				piece = white_knight_png;
-				break;
-			case "white_bishop":
-				piece = white_bishop_png;
-				break;
-			case "white_queen":
-				piece = white_queen_png;
-				break;
-			case "white_king":
-				piece = white_king_png;
-				break;
-			default:
-				piece = undefined;
-		}
+		const blackPieces = {
+			pawn: black_pawn_png,
+			rook: black_rook_png,
+			knight: black_knight_png,
+			bishop: black_bishop_png,
+			queen: black_queen_png,
+			king: black_king_png,
+		};
 
-		return piece;
+		const whitePieces = {
+			pawn: white_pawn_png,
+			rook: white_rook_png,
+			knight: white_knight_png,
+			bishop: white_bishop_png,
+			queen: white_queen_png,
+			king: white_king_png,
+		};
+
+		if (piece !== undefined) {
+			return piece.split("_")[0] === "white" ? whitePieces[piece.split("_")[1]] : blackPieces[piece.split("_")[1]];
+		}
 	}
 }
 

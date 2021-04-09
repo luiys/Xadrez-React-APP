@@ -4,6 +4,7 @@ const game = new Game();
 
 var _global = {
 	currentFEN: "",
+	player: "w",
 };
 
 export function fen_analyzer(param) {
@@ -79,49 +80,22 @@ export function create_fen(positions) {
 
 function changeNames(array) {
 	for (let i = 0; i < array.length; i++) {
-		switch (array[i]) {
-			case "r":
-				array[i] = "black_rook";
-				break;
-			case "n":
-				array[i] = "black_knight";
-				break;
-			case "b":
-				array[i] = "black_bishop";
-				break;
-			case "q":
-				array[i] = "black_queen";
-				break;
-			case "k":
-				array[i] = "black_king";
-				break;
-			case "p":
-				array[i] = "black_pawn";
-				break;
-			case "R":
-				array[i] = "white_rook";
-				break;
-			case "N":
-				array[i] = "white_knight";
-				break;
-			case "B":
-				array[i] = "white_bishop";
-				break;
-			case "Q":
-				array[i] = "white_queen";
-				break;
-			case "K":
-				array[i] = "white_king";
-				break;
-			case "P":
-				array[i] = "white_pawn";
-				break;
-			default:
-			// "unexpected value or a number"
+		const numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
+		if (!numbers.includes(array[i])) {
+			let color = array[i] === array[i].toLowerCase() ? "black" : "white";
+
+			const pieces = {
+				r: "rook",
+				n: "knight",
+				b: "bishop",
+				q: "queen",
+				k: "king",
+				p: "pawn",
+			};
+
+			array[i] = `${color}_${pieces[array[i].toLowerCase()]}`;
 		}
 	}
-
-	return array;
 }
 
 function inverseChangeNames(array) {
@@ -167,5 +141,6 @@ function inverseChangeNames(array) {
 			//ok
 		}
 	}
+
 	return array;
 }

@@ -1,3 +1,5 @@
+import _ from "underscore";
+
 var _global = {
 	Clicked: false,
 	PieceToBeMoved: "",
@@ -5,7 +7,7 @@ var _global = {
 	PossibleMoviments: [],
 	PiecePositions: [[], [], [], [], [], [], [], []],
 	enPassant: [undefined, undefined],
-	Player: "w",
+	Player: "",
 	lastSquare: [undefined, undefined],
 	newSquare: [undefined, undefined],
 };
@@ -37,7 +39,7 @@ function doTheMove(y, x) {
 	try {
 		var possible = false;
 		for (let i = 0; i < _global.PossibleMoviments.length; i++) {
-			if (y === _global.PossibleMoviments[i][0] && x === _global.PossibleMoviments[i][1]) {
+			if (_.isEqual(_global.PossibleMoviments[i], [y, x])) {
 				//promoção de peão
 				if (_global.PieceToBeMoved.split("_")[1] === "pawn" && (y === 7 || y === 0)) {
 					_global.PieceToBeMoved = _global.PieceToBeMoved.split("_")[0] + "_queen";
@@ -64,23 +66,16 @@ function doTheMove(y, x) {
 
 function switchPiece(piece, y, x) {
 	var colorPiece = piece.split("_")[0];
+	const functions = {
+		pawn: pawn_moviments(y, x, colorPiece),
+		rook: rook_moviments(y, x, colorPiece),
+		knight: knight_moviments(y, x, colorPiece),
+		bishop: bishop_moviments(y, x, colorPiece),
+		queen: queen_moviments(y, x, colorPiece),
+		king: king_moviments(y, x, colorPiece),
+	};
 
-	switch (piece.split("_")[1]) {
-		case "rook":
-			return rook_moviments(y, x, colorPiece);
-		case "knight":
-			return knight_moviments(y, x, colorPiece);
-		case "bishop":
-			return bishop_moviments(y, x, colorPiece);
-		case "queen":
-			return queen_moviments(y, x, colorPiece);
-		case "king":
-			return king_moviments(y, x, colorPiece);
-		case "pawn":
-			return pawn_moviments(y, x, colorPiece);
-		default:
-			console.error("unexpected piece");
-	}
+	return functions[piece.split("_")[1]];
 }
 
 function pawn_moviments(y, x, color) {
@@ -254,7 +249,6 @@ function bishop_moviments(y, x, color) {
 function queen_moviments(y, x, color) {
 	var straightMoviments = rook_moviments(y, x, color);
 	var diagonalMoviments = bishop_moviments(y, x, color);
-
 	return straightMoviments.concat(diagonalMoviments);
 }
 

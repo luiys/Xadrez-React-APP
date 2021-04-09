@@ -4,6 +4,7 @@ import { fen_analyzer as putPiecesOnBoard, create_fen } from "./js/Fen";
 import { MainMovePiece } from "./js/MovePiece";
 import Game from "./js/Game";
 import "./style.css";
+import _ from "underscore";
 
 const game = new Game();
 
@@ -29,9 +30,9 @@ class Board extends React.Component {
 		}
 
 		function setSquareColor(color, piece, numberLine, index, activeSquare, lastSquare, newSquare, possibleMoviments) {
-			var isActive = piece !== undefined && numberLine === activeSquare[0] && index === activeSquare[1];
-			var isLastSquare = piece === undefined && numberLine === lastSquare[0] && index === lastSquare[1];
-			var isNewSquare = piece !== undefined && numberLine === newSquare[0] && index === newSquare[1];
+			var isActive = piece !== undefined && _.isEqual(activeSquare, [numberLine, index]);
+			var isNewSquare = piece !== undefined && _.isEqual(newSquare, [numberLine, index]);
+			var isLastSquare = piece === undefined && _.isEqual(lastSquare, [numberLine, index]);
 
 			if (isActive || isLastSquare || isNewSquare) {
 				for (let i = 0; i < possibleMoviments.length; i++) {
@@ -85,18 +86,17 @@ class Board extends React.Component {
 	}
 
 	render() {
-		return (
-			<div className="board">
-				<div className="line">{this.createSquares(0)}</div>
-				<div className="line">{this.createSquares(1)}</div>
-				<div className="line">{this.createSquares(2)}</div>
-				<div className="line">{this.createSquares(3)}</div>
-				<div className="line">{this.createSquares(4)}</div>
-				<div className="line">{this.createSquares(5)}</div>
-				<div className="line">{this.createSquares(6)}</div>
-				<div className="line">{this.createSquares(7)}</div>
-			</div>
-		);
+		const content = Array(8)
+			.fill(undefined)
+			.map((_, index) => {
+				return (
+					<div className="line" key={index}>
+						{this.createSquares(index)}
+					</div>
+				);
+			});
+
+		return <div className="board">{content}</div>;
 	}
 }
 
